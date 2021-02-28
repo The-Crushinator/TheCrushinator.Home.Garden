@@ -29,6 +29,12 @@ jobs:
       runOnce:
         deploy:
           steps:
+            - bash: echo $(AppServiceName)
+            - bash: echo ${{ parameters.appServiceName }}
+            - bash: echo $(AzureConnectionName)
+            - bash: echo ${{ parameters.azureConnectionName }}
+            - bash: echo $(ResourceGroupName)
+            - bash: echo ${{ parameters.resourceGroupName }}
             - task: DownloadBuildArtifacts@0
               displayName: 'Download the API build artifact'
               inputs:
@@ -42,7 +48,7 @@ jobs:
               inputs:
                 azureSubscription: '${{ parameters.azureConnectionName }}'
                 appType: 'webAppLinux'
-                appName: '${{ parameters.AppServiceName }}'
+                appName: '${{ parameters.appServiceName }}'
                 resourceGroupName: '${{ parameters.resourceGroupName }}'
                 package: '$(System.DefaultWorkingDirectory)/**/*API*.zip'
                 runtimeStack: 'DOTNET|5.0'

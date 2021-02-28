@@ -21,21 +21,18 @@ stages:
     jobs:
       - job: EchoVars
         steps:
-          - bash: echo ${{ variables.AppServiceName }}
           - bash: echo $(AppServiceName)
-          - bash: echo ${{ variables.ASPNETCOREENVIRONMENT }}
           - bash: echo $(ASPNETCOREENVIRONMENT)
-          - bash: echo ${{ variables.AzureConnectionName }}
           - bash: echo $(AzureConnectionName)
-          - bash: echo ${{ variables.ResourceGroupName }}
           - bash: echo $(ResourceGroupName)
-      # - template: azure-pipelines-deployment-template.yml
-      #   parameters:
-      #     azureConnectionName: ${{ variables.AzureConnectionName }}
-      #     appServiceName: ${{ variables.AppServiceName }}
-      #     resourceGroupName: ${{ variables.ResourceGroupName }}
-      #     environment: 'DEV'
-      #     dotnetAppName: ${{ variables.dotnetAppName }}
+          - bash: echo ${{ variables.dotnetAppName }}
+      - template: azure-pipelines-deployment-template.yml
+        parameters:
+          azureConnectionName: $(AzureConnectionName)
+          appServiceName: $(AppServiceName)
+          resourceGroupName: $(ResourceGroupName)
+          environment: 'DEV'
+          dotnetAppName: ${{ variables.dotnetAppName }}
 
   # - stage: DeployTEST
   #   displayName: 'Deploy to TEST environment'
