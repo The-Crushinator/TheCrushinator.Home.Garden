@@ -1,5 +1,9 @@
 # ASP.Net Core and Angular build and deploy- using templates
 
+variables:
+  buildConfiguration: 'Release'
+  dotnetAppName: 'TheCrushinator.Home.Garden.API'
+
 trigger:
   - main
 
@@ -12,26 +16,17 @@ stages:
     # dependsOn:
     #   - Build_dotnet_core_app
     #   - Build_angular_app
-    # variables:
-    #   - group: 'tc-home-dev-env-variable-group'
+    variables:
+      - group: 'tc-home-dev-env-variable-group'
     jobs:
       - job: EchoVars
-        steps:
-          - bash: echo $(AppServiceName)
-          - bash: echo $(ASPNETCOREENVIRONMENT)
-          - bash: echo $(AzureConnectionName)
-          - bash: echo $(ResourceGroupName)
-          - bash: echo ${{ variables.dotnetAppName }}
-          - bash: echo AzureConnectionName is $AzureConnectionName
-          - bash: echo AppServiceName is $AppServiceName
-          - bash: echo ResourceGroupName is $ResourceGroupName
       - template: azure-pipelines-deployment-template.yml
         parameters:
-          azureConnectionName: '${{ variables.AzureConnectionName }}'
-          appServiceName: '${{ variables.AppServiceName }}'
-          resourceGroupName: '${{ variables.ResourceGroupName }}'
+          azureConnectionName: 'tc-home-dev-service-connection'
+          appServiceName: $(AppServiceName)
+          resourceGroupName: $(ResourceGroupName)
           environment: 'DEV'
-          dotnetAppName: 'TheCrushinator.Home.Garden.API'
+          dotnetAppName: ${{ variables.dotnetAppName }}
 
   # - stage: DeployTEST
   #   displayName: 'Deploy to TEST environment'
