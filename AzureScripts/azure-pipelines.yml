@@ -4,14 +4,14 @@ trigger:
   - main
 
 stages:
-  # - template: azure-pipelines-build-template.yml
+  - template: azure-pipelines-build-template.yml
 
   - stage: DeployDEV
     displayName: 'Deploy to DEV environment'
     condition: succeeded()
-    # dependsOn:
-    #   - Build_dotnet_core_app
-    #   - Build_angular_app
+    dependsOn:
+      - Build_dotnet_core_app
+      - Build_angular_app
     variables:
       - group: 'tc-home-dev-env-variable-group'
     jobs:
