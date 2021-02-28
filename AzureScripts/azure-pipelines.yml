@@ -21,11 +21,11 @@ stages:
     jobs:
       - template: azure-pipelines-deployment-template.yml
         parameters:
-          azureConnectionName: '$(AzureConnectionName)'
-          appServiceName: '$(AppServiceName)'
-          resourceGroupName: '$(ResourceGroupName)'
+          azureConnectionName: $(AzureConnectionName)
+          appServiceName: $(AppServiceName)
+          resourceGroupName: $(ResourceGroupName)
           environment: 'DEV'
-          dotnetAppName: '$(dotnetAppName)'
+          dotnetAppName: $(dotnetAppName)
 
   - stage: DeployTEST
     displayName: 'Deploy to TEST environment'
@@ -38,11 +38,11 @@ stages:
     jobs:
       - template: azure-pipelines-deployment-template.yml
         parameters:
-          azureConnectionName: '$(AzureConnectionName)'
-          appServiceName: '$(AppServiceName)'
-          resourceGroupName: '$(ResourceGroupName)'
+          azureConnectionName: $(AzureConnectionName)
+          appServiceName: $(AppServiceName)
+          resourceGroupName: $(ResourceGroupName)
           environment: 'TEST'
-          dotnetAppName: '$(dotnetAppName)'
+          dotnetAppName: $(dotnetAppName)
 
   - stage: DeployPROD
     displayName: 'Deploy to PRD environment'
@@ -55,8 +55,8 @@ stages:
     jobs:
       - template: azure-pipelines-deployment-template.yml
         parameters:
-          azureConnectionName: '$(AzureConnectionName)'
-          appServiceName: '$(AppServiceName)'
-          resourceGroupName: '$(ResourceGroupName)'
+          azureConnectionName: $(AzureConnectionName)
+          appServiceName: $(AppServiceName)
+          resourceGroupName: $(ResourceGroupName)
           environment: 'PRD'
-          dotnetAppName: '$(dotnetAppName)'
+          dotnetAppName: $(dotnetAppName)
