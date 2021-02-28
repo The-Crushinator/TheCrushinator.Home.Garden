@@ -1,7 +1,4 @@
-# ASP.Net Core and Angular build
-
-trigger:
-  - main
+# ASP.Net Core and Angular build and deploy- using templates
 
 variables:
   buildConfiguration: "Release"
