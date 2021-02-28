@@ -17,7 +17,7 @@ stages:
       - Build_dotnet_core_app
       - Build_angular_app
     variables:
-      - group: 'tc-home-dev-env-variable-groupx'
+      - group: 'tc-home-dev-env-variable-group'
     jobs:
       - template: azure-pipelines-deployment-template.yml
         parameters:
@@ -27,36 +27,36 @@ stages:
           environment: 'DEV'
           dotnetAppName: $(dotnetAppName)
 
-  - stage: DeployTEST
-    displayName: 'Deploy to TEST environment'
-    condition: succeeded()
-    dependsOn:
-      - Build_dotnet_core_app
-      - Build_angular_app
-    variables:
-      - group: 'tc-home-test-env-variable-group'
-    jobs:
-      - template: azure-pipelines-deployment-template.yml
-        parameters:
-          azureConnectionName: $(AzureConnectionName)
-          appServiceName: $(AppServiceName)
-          resourceGroupName: $(ResourceGroupName)
-          environment: 'TEST'
-          dotnetAppName: $(dotnetAppName)
+  # - stage: DeployTEST
+  #   displayName: 'Deploy to TEST environment'
+  #   condition: succeeded()
+  #   dependsOn:
+  #     - Build_dotnet_core_app
+  #     - Build_angular_app
+  #   variables:
+  #     - group: 'tc-home-test-env-variable-group'
+  #   jobs:
+  #     - template: azure-pipelines-deployment-template.yml
+  #       parameters:
+  #         azureConnectionName: $(AzureConnectionName)
+  #         appServiceName: $(AppServiceName)
+  #         resourceGroupName: $(ResourceGroupName)
+  #         environment: 'TEST'
+  #         dotnetAppName: $(dotnetAppName)
 
-  - stage: DeployPROD
-    displayName: 'Deploy to PRD environment'
-    condition: succeeded()
-    dependsOn:
-      - Build_dotnet_core_app
-      - Build_angular_app
-    variables:
-      - group: 'tc-home-prd-env-variable-group'
-    jobs:
-      - template: azure-pipelines-deployment-template.yml
-        parameters:
-          azureConnectionName: $(AzureConnectionName)
-          appServiceName: $(AppServiceName)
-          resourceGroupName: $(ResourceGroupName)
-          environment: 'PRD'
-          dotnetAppName: $(dotnetAppName)
+  # - stage: DeployPROD
+  #   displayName: 'Deploy to PRD environment'
+  #   condition: succeeded()
+  #   dependsOn:
+  #     - Build_dotnet_core_app
+  #     - Build_angular_app
+  #   variables:
+  #     - group: 'tc-home-prd-env-variable-group'
+  #   jobs:
+  #     - template: azure-pipelines-deployment-template.yml
+  #       parameters:
+  #         azureConnectionName: $(AzureConnectionName)
+  #         appServiceName: $(AppServiceName)
+  #         resourceGroupName: $(ResourceGroupName)
+  #         environment: 'PRD'
+  #         dotnetAppName: $(dotnetAppName)
