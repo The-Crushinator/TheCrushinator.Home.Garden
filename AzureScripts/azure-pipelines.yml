@@ -8,18 +8,17 @@ trigger:
   - main
 
 stages:
-  # - template: azure-pipelines-build-template.yml
+  - template: azure-pipelines-build-template.yml
 
   - stage: DeployDEV
     displayName: 'Deploy to DEV environment'
     condition: succeeded()
-    # dependsOn:
-    #   - Build_dotnet_core_app
-    #   - Build_angular_app
+    dependsOn:
+      - Build_dotnet_core_app
+      - Build_angular_app
     variables:
       - group: 'tc-home-dev-env-variable-group'
     jobs:
-      - job: EchoVars
       - template: azure-pipelines-deployment-template.yml
         parameters:
           azureConnectionName: 'tc-home-dev-service-connection'
@@ -39,7 +38,7 @@ stages:
   #   jobs:
   #     - template: azure-pipelines-deployment-template.yml
   #       parameters:
-  #         azureConnectionName: $(AzureConnectionName)
+  #         azureConnectionName: 'tc-home-test-service-connection'
   #         appServiceName: $(AppServiceName)
   #         resourceGroupName: $(ResourceGroupName)
   #         environment: 'TEST'
@@ -56,7 +55,7 @@ stages:
   #   jobs:
   #     - template: azure-pipelines-deployment-template.yml
   #       parameters:
-  #         azureConnectionName: $(AzureConnectionName)
+  #         azureConnectionName: 'tc-home-prd-service-connection'
   #         appServiceName: $(AppServiceName)
   #         resourceGroupName: $(ResourceGroupName)
   #         environment: 'PRD'
