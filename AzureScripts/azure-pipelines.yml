@@ -13,7 +13,9 @@ stages:
   - stage: DeployDEV
     displayName: "Deploy to DEV environment"
     condition: succeeded()
-    dependsOn: Build
+    dependsOn:
+      - Build_dotnet_core_app
+      - Build_angular_app
     variables:
       - group: "tc-home-dev-env-variable-group"
     jobs:
