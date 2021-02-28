@@ -1,4 +1,16 @@
 parameters:
+  - name: 'azureConnectionName'
+    default: ''
+    type: string
+
+  - name: 'appServiceName'
+    default: ''
+    type: string
+
+  - name: 'resourceGroupName'
+    default: ''
+    type: string
+
   - name: 'environment'
     default: ''
     type: string
@@ -17,7 +29,14 @@ jobs:
       runOnce:
         deploy:
           steps:
+            - bash: echo $(AppServiceName)
+            - bash: echo ${{ parameters.appServiceName }}
+            - bash: echo $(ASPNETCOREENVIRONMENT)
+            - bash: echo ${{ parameters.ASPNETCOREENVIRONMENT }}
+            - bash: echo $(AzureConnectionName)
+            - bash: echo ${{ parameters.azureConnectionName }}
             - bash: echo $(ResourceGroupName)
+            - bash: echo ${{ parameters.ResourceGroupName }}
             - task: DownloadBuildArtifacts@0
               displayName: 'Download the API build artifact'
               inputs:
@@ -29,10 +48,10 @@ jobs:
             - task: AzureWebApp@1
               displayName: Release package to Azure Web App
               inputs:
-                azureSubscription: $(AzureConnectionName)
+                azureSubscription: '${{ parameters.azureConnectionName }}'
                 appType: 'webAppLinux'
-                appName: $(AppServiceName)
-                resourceGroupName: $(ResourceGroupName)
+                appName: '${{ parameters.appServiceName }}'
+                resourceGroupName: '${{ parameters.resourceGroupName }}'
                 package: '$(System.DefaultWorkingDirectory)/**/*API*.zip'
                 runtimeStack: 'DOTNET|5.0'
                 startUpCommand: 'dotnet ${{ parameters.dotnetAppName }}.dll'
