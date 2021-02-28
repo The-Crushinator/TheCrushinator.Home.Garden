@@ -20,7 +20,7 @@ stages:
       - template: azure-pipelines-deployment-template.yml
         parameters:
           azureConnectionName: "$(AzureConnectionName)"
-          funcAppName: "$(FuncAppName)"
+          appServiceName: "$(AppServiceName)"
           resourceGroupName: "$(ResourceGroupName)"
           environment: "DEV"
           dotnetAppName: "$(dotnetAppName)"
@@ -35,7 +35,7 @@ stages:
       - template: azure-pipelines-deployment-template.yml
         parameters:
           azureConnectionName: "$(AzureConnectionName)"
-          funcAppName: "$(FuncAppName)"
+          appServiceName: "$(AppServiceName)"
           resourceGroupName: "$(ResourceGroupName)"
           environment: "TEST"
           dotnetAppName: "$(dotnetAppName)"
@@ -50,7 +50,7 @@ stages:
       - template: azure-pipelines-deployment-template.yml
         parameters:
           azureConnectionName: "$(AzureConnectionName)"
-          funcAppName: "$(FuncAppName)"
+          appServiceName: "$(AppServiceName)"
           resourceGroupName: "$(ResourceGroupName)"
           environment: "PRD"
           dotnetAppName: "$(dotnetAppName)"

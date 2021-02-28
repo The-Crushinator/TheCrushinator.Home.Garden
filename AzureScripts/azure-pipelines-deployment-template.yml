@@ -1,4 +1,20 @@
 parameters:
+  - name: "azureConnectionName"
+    default: ""
+    type: string
+
+  - name: "appServiceName"
+    default: ""
+    type: string
+
+  - name: "resourceGroupName"
+    default: ""
+    type: string
+
+  - name: "environment"
+    default: ""
+    type: string
+
   - name: "dotnetAppName"
     default: ""
     type: string
@@ -6,7 +22,7 @@ parameters:
 jobs:
   - deployment: Deploy
     displayName: "Deploy TheCrushinator Home Web App"
-    environment: $
+    environment: "${{ parameters.environment }}"
     pool:
       vmImage: "ubuntu-latest"
     strategy:
@@ -24,10 +40,10 @@ jobs:
             - task: AzureWebApp@1
               displayName: Release package to Azure Web App
               inputs:
-                azureSubscription: $
+                azureSubscription: "${{ parameters.azureConnectionName }}"
                 appType: "webAppLinux"
-                appName: $
-                resourceGroupName: $
+                appName: "${{ parameters.AppServiceName }}"
+                resourceGroupName: "${{ parameters.resourceGroupName }}"
                 package: "$(System.DefaultWorkingDirectory)/**/*API*.zip"
                 runtimeStack: "DOTNET|5.0"
                 startUpCommand: "dotnet ${{ parameters.dotnetAppName }}.dll"
