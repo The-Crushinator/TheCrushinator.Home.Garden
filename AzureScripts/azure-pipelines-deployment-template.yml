@@ -31,8 +31,6 @@ jobs:
           steps:
             - bash: echo $(AppServiceName)
             - bash: echo ${{ parameters.appServiceName }}
-            - bash: echo $(ASPNETCOREENVIRONMENT)
-            - bash: echo ${{ parameters.ASPNETCOREENVIRONMENT }}
             - bash: echo $(AzureConnectionName)
             - bash: echo ${{ parameters.azureConnectionName }}
             - bash: echo $(ResourceGroupName)
