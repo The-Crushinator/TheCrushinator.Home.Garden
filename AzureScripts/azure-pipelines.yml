@@ -30,7 +30,9 @@ stages:
   - stage: DeployTEST
     displayName: "Deploy to TEST environment"
     condition: succeeded()
-    dependsOn: Build
+    dependsOn:
+      - Build_dotnet_core_app
+      - Build_angular_app
     variables:
       - group: "tc-home-test-env-variable-group"
     jobs:
@@ -45,7 +47,9 @@ stages:
   - stage: DeployPROD
     displayName: "Deploy to PRD environment"
     condition: succeeded()
-    dependsOn: Build
+    dependsOn:
+      - Build_dotnet_core_app
+      - Build_angular_app
     variables:
       - group: "tc-home-prd-env-variable-group"
     jobs:
