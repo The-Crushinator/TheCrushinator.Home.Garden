@@ -23,6 +23,8 @@ jobs:
   - deployment: Deploy
     displayName: 'Deploy TheCrushinator Home Web App'
     environment: '${{ parameters.environment }}'
+    variables:
+      - group: 'tc-home-dev-env-variable-group'
     pool:
       vmImage: 'ubuntu-latest'
     strategy:

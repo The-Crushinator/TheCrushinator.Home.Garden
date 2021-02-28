@@ -12,8 +12,8 @@ stages:
     # dependsOn:
     #   - Build_dotnet_core_app
     #   - Build_angular_app
-    variables:
-      - group: 'tc-home-dev-env-variable-group'
+    # variables:
+    #   - group: 'tc-home-dev-env-variable-group'
     jobs:
       - job: EchoVars
         steps:
