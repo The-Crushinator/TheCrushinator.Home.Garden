@@ -17,7 +17,7 @@ stages:
       - Build_dotnet_core_app
       - Build_angular_app
     variables:
-      - group: 'tc-home-dev-env-variable-group'
+      - group: 'tc-home-dev-env-variable-groupx'
     jobs:
       - template: azure-pipelines-deployment-template.yml
         parameters:
