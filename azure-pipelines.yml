@@ -91,45 +91,44 @@ stages:
         inputs:
           pathtoPublish: '$(Build.ArtifactStagingDirectory)/Api.$(Build.BuildId).zip'
           artifactName: 'Artifacts'
+  - stage: Build_angular_app
+    jobs:
+      - job: BuildJob
+        steps:
+        - task: Npm@1
+          displayName: 'npm install'
+          inputs:
+            workingDir: '${{ parameters.uiProjectFolder }}'
+            verbose: false
 
-- stage: Build_angular_app
-  jobs:
-    - job: BuildJob
-      steps:
-      - task: Npm@1
-        displayName: 'npm install'
-        inputs:
-          workingDir: '${{ parameters.uiProjectFolder }}'
-          verbose: false
+        - script: |
+            sudo npm install -g @angular/cli
+            ng build --prod --output-path dist/${{ parameters.uiProjectFolder }} --base-href ${{ parameters.baseHref }}
+            sudo npm install -g tslint
+            tslint --project tslint.json src/**/**.ts --format stylish 
+          displayName: 'npm build and lint'
+          workingDirectory: '${{ parameters.uiProjectFolder }}'  # initial working directory for the step
 
-      - script: |
-          sudo npm install -g @angular/cli
-          ng build --prod --output-path dist/${{ parameters.uiProjectFolder }} --base-href ${{ parameters.baseHref }}
-          sudo npm install -g tslint
-          tslint --project tslint.json src/**/**.ts --format stylish 
-        displayName: 'npm build and lint'
-        workingDirectory: '${{ parameters.uiProjectFolder }}'  # initial working directory for the step
-
-      - task: CopyFiles@2
-        displayName: 'Copy Files'
-        inputs:
-          sourceFolder: '${{ parameters.uiProjectFolder }}/dist/${{ parameters.uiProjectFolder }}'
-          contents: '**/*'
-          targetFolder: '$(Build.ArtifactStagingDirectory)\AngularArtifacts'
-          cleanTargetFolder: true
+        - task: CopyFiles@2
+          displayName: 'Copy Files'
+          inputs:
+            sourceFolder: '${{ parameters.uiProjectFolder }}/dist/${{ parameters.uiProjectFolder }}'
+            contents: '**/*'
+            targetFolder: '$(Build.ArtifactStagingDirectory)\AngularArtifacts'
+            cleanTargetFolder: true
           
-      ## Archive the files into a zip file for publishing
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\AngularArtifacts'
-          archiveType: 'zip'
-          archiveFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.uiProjectFolder }}.$(Build.BuildId).zip'
-          includeRootFolder: false
+        ## Archive the files into a zip file for publishing
+        - task: ArchiveFiles@2
+          inputs:
+            rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\AngularArtifacts'
+            archiveType: 'zip'
+            archiveFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.uiProjectFolder }}.$(Build.BuildId).zip'
+            includeRootFolder: false
 
-      ## Publish the zip file
-      - task: PublishBuildArtifacts@1
-        displayName: 'Publish - UI Artifacts'
-        inputs:
-          pathtoPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.uiProjectFolder }}.$(Build.BuildId).zip'
-          artifactName: 'Artifacts'
+        ## Publish the zip file
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish - UI Artifacts'
+          inputs:
+            pathtoPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.uiProjectFolder }}.$(Build.BuildId).zip'
+            artifactName: 'Artifacts'
 
