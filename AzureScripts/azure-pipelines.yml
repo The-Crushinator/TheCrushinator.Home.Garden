@@ -1,8 +1,8 @@
 # ASP.Net Core and Angular build and deploy- using templates
 
-variables:
-  buildConfiguration: 'Release'
-  dotnetAppName: 'TheCrushinator.Home.Garden.API'
+# variables:
+#   buildConfiguration: 'Release'
+#   dotnetAppName:
 
 trigger:
   - main
@@ -22,7 +22,7 @@ stages:
       - template: azure-pipelines-deployment-template.yml
         parameters:
           environment: 'DEV'
-          dotnetAppName: ${{ variables.dotnetAppName }}
+          dotnetAppName: 'TheCrushinator.Home.Garden.API'
 
   # - stage: DeployTEST
   #   displayName: 'Deploy to TEST environment'
