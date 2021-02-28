@@ -21,11 +21,11 @@ stages:
     jobs:
       - template: azure-pipelines-deployment-template.yml
         parameters:
-          azureConnectionName: $(AzureConnectionName)
-          appServiceName: $(AppServiceName)
-          resourceGroupName: $(ResourceGroupName)
+          azureConnectionName: ${{ variables.AzureConnectionName }}
+          appServiceName: ${{ variables.AppServiceName }}
+          resourceGroupName: ${{ variables.ResourceGroupName }}
           environment: 'DEV'
-          dotnetAppName: $(dotnetAppName)
+          dotnetAppName: ${{ variables.dotnetAppName }}
 
   # - stage: DeployTEST
   #   displayName: 'Deploy to TEST environment'
