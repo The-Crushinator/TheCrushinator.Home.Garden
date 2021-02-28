@@ -15,6 +15,6 @@ steps:
     deployToSlotOrASE: true
     resourceGroupName: 'TheCrushinator.Home'
     slotName: 'production'
-    package: '$(System.DefaultWorkingDirectory)/**/*API*.zip'
+    package: '$(System.DefaultWorkingDirectory)/**/*Api*.zip'
     runtimeStack: 'DOTNET|5.0'
     startUpCommand: 'dotnet TheCrushinator.Home.Garden.API.dll'
