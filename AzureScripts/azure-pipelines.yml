@@ -8,32 +8,19 @@ trigger:
   - main
 
 stages:
-  # - template: azure-pipelines-build-template.yml
+  - template: azure-pipelines-build-template.yml
 
   - stage: DeployDEV
     displayName: 'Deploy to DEV environment'
     condition: succeeded()
-    # dependsOn:
-    #   - Build_dotnet_core_app
-    #   - Build_angular_app
+    dependsOn:
+      - Build_dotnet_core_app
+      - Build_angular_app
     variables:
       - group: 'tc-home-dev-env-variable-group'
     jobs:
-      - job: EchoVars
-        steps:
-          - bash: echo $(AppServiceName)
-          - bash: echo $(ASPNETCOREENVIRONMENT)
-          - bash: echo $(AzureConnectionName)
-          - bash: echo $(ResourceGroupName)
-          - bash: echo ${{ variables.dotnetAppName }}
-          - bash: echo variables.AzureConnectionName is ${{ variables.AzureConnectionName }}
-          - bash: echo variables.AppServiceName is ${{ variables.AppServiceName }}
-          - bash: echo variables.ResourceGroupName is ${{ variables.ResourceGroupName }}
       - template: azure-pipelines-deployment-template.yml
         parameters:
-          azureConnectionName: '${{ variables.AzureConnectionName }}'
-          appServiceName: '${{ variables.AppServiceName }}'
-          resourceGroupName: '${{ variables.ResourceGroupName }}'
           environment: 'DEV'
           dotnetAppName: ${{ variables.dotnetAppName }}
 
@@ -48,9 +35,6 @@ stages:
   #   jobs:
   #     - template: azure-pipelines-deployment-template.yml
   #       parameters:
-  #         azureConnectionName: $(AzureConnectionName)
-  #         appServiceName: $(AppServiceName)
-  #         resourceGroupName: $(ResourceGroupName)
   #         environment: 'TEST'
   #         dotnetAppName: $(dotnetAppName)
 
@@ -65,8 +49,5 @@ stages:
   #   jobs:
   #     - template: azure-pipelines-deployment-template.yml
   #       parameters:
-  #         azureConnectionName: $(AzureConnectionName)
-  #         appServiceName: $(AppServiceName)
-  #         resourceGroupName: $(ResourceGroupName)
   #         environment: 'PRD'
   #         dotnetAppName: $(dotnetAppName)
