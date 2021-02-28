@@ -23,12 +23,12 @@ stages:
         steps:
           - bash: echo $(AppServiceName)
           - bash: echo $(ASPNETCOREENVIRONMENT)
-          - bash: echo $(AzureConnectionName)
+          - bash: echo $(AzureConnectionNamex)
           - bash: echo $(ResourceGroupName)
           - bash: echo ${{ variables.dotnetAppName }}
       - template: azure-pipelines-deployment-template.yml
         parameters:
-          azureConnectionName: $(AzureConnectionName)
+          azureConnectionName: $(AzureConnectionNamex)
           appServiceName: $(AppServiceName)
           resourceGroupName: $(ResourceGroupName)
           environment: 'DEV'
@@ -45,7 +45,7 @@ stages:
   #   jobs:
   #     - template: azure-pipelines-deployment-template.yml
   #       parameters:
-  #         azureConnectionName: $(AzureConnectionName)
+  #         azureConnectionName: $(AzureConnectionNamex)
   #         appServiceName: $(AppServiceName)
   #         resourceGroupName: $(ResourceGroupName)
   #         environment: 'TEST'
@@ -62,7 +62,7 @@ stages:
   #   jobs:
   #     - template: azure-pipelines-deployment-template.yml
   #       parameters:
-  #         azureConnectionName: $(AzureConnectionName)
+  #         azureConnectionName: $(AzureConnectionNamex)
   #         appServiceName: $(AppServiceName)
   #         resourceGroupName: $(ResourceGroupName)
   #         environment: 'PRD'
