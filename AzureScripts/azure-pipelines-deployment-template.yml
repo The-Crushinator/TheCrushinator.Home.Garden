@@ -46,10 +46,10 @@ jobs:
             - task: AzureWebApp@1
               displayName: Release package to Azure Web App
               inputs:
-                azureSubscription: '${{ parameters.azureConnectionName }}'
+                azureSubscription: $(AzureConnectionName) #'${{ parameters.azureConnectionName }}'
                 appType: 'webAppLinux'
-                appName: '${{ parameters.appServiceName }}'
-                resourceGroupName: '${{ parameters.resourceGroupName }}'
+                appName: $(AppServiceName) #'${{ parameters.appServiceName }}'
+                resourceGroupName: $(ResourceGroupName) #'${{ parameters.resourceGroupName }}'
                 package: '$(System.DefaultWorkingDirectory)/**/*API*.zip'
                 runtimeStack: 'DOTNET|5.0'
                 startUpCommand: 'dotnet ${{ parameters.dotnetAppName }}.dll'
