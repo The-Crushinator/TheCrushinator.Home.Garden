@@ -1,49 +1,49 @@
 parameters:
-  - name: "azureConnectionName"
-    default: ""
+  - name: 'azureConnectionName'
+    default: ''
     type: string
 
-  - name: "appServiceName"
-    default: ""
+  - name: 'appServiceName'
+    default: ''
     type: string
 
-  - name: "resourceGroupName"
-    default: ""
+  - name: 'resourceGroupName'
+    default: ''
     type: string
 
-  - name: "environment"
-    default: ""
+  - name: 'environment'
+    default: ''
     type: string
 
-  - name: "dotnetAppName"
-    default: ""
+  - name: 'dotnetAppName'
+    default: ''
     type: string
 
 jobs:
   - deployment: Deploy
-    displayName: "Deploy TheCrushinator Home Web App"
-    environment: "${{ parameters.environment }}"
+    displayName: 'Deploy TheCrushinator Home Web App'
+    environment: '${{ parameters.environment }}'
     pool:
-      vmImage: "ubuntu-latest"
+      vmImage: 'ubuntu-latest'
     strategy:
       runOnce:
         deploy:
           steps:
             - task: DownloadBuildArtifacts@0
-              displayName: "Download the API build artifact"
+              displayName: 'Download the API build artifact'
               inputs:
-                buildType: "current"
-                downloadType: "single"
-                artifactName: "API"
-                downloadPath: "$(System.DefaultWorkingDirectory)"
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'API'
+                downloadPath: '$(System.DefaultWorkingDirectory)'
 
             - task: AzureWebApp@1
               displayName: Release package to Azure Web App
               inputs:
-                azureSubscription: "${{ parameters.azureConnectionName }}"
-                appType: "webAppLinux"
-                appName: "${{ parameters.AppServiceName }}"
-                resourceGroupName: "${{ parameters.resourceGroupName }}"
-                package: "$(System.DefaultWorkingDirectory)/**/*API*.zip"
-                runtimeStack: "DOTNET|5.0"
-                startUpCommand: "dotnet ${{ parameters.dotnetAppName }}.dll"
+                azureSubscription: '${{ parameters.azureConnectionName }}'
+                appType: 'webAppLinux'
+                appName: '${{ parameters.AppServiceName }}'
+                resourceGroupName: '${{ parameters.resourceGroupName }}'
+                package: '$(System.DefaultWorkingDirectory)/**/*API*.zip'
+                runtimeStack: 'DOTNET|5.0'
+                startUpCommand: 'dotnet ${{ parameters.dotnetAppName }}.dll'
