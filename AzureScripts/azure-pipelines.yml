@@ -4,14 +4,14 @@ trigger:
   - main
 
 stages:
-  - template: azure-pipelines-build-template.yml
+  # - template: azure-pipelines-build-template.yml
 
   - stage: DeployDEV
     displayName: 'Deploy to DEV environment'
     condition: succeeded()
-    dependsOn:
-      - Build_dotnet_core_app
-      - Build_angular_app
+    # dependsOn:
+    #   - Build_dotnet_core_app
+    #   - Build_angular_app
     variables:
       - group: 'tc-home-dev-env-variable-group'
     jobs:
@@ -22,9 +22,9 @@ stages:
           - bash: echo $(AzureConnectionName)
           - bash: echo $(ResourceGroupName)
           - bash: echo ${{ variables.dotnetAppName }}
-          - bash: echo variables.AzureConnectionName is ${{ variables.AzureConnectionName }}
-          - bash: echo variables.AppServiceName is ${{ variables.AppServiceName }}
-          - bash: echo variables.ResourceGroupName is ${{ variables.ResourceGroupName }}
+          - bash: echo AzureConnectionName is $AzureConnectionName
+          - bash: echo AppServiceName is $AppServiceName
+          - bash: echo ResourceGroupName is $ResourceGroupName
       - template: azure-pipelines-deployment-template.yml
         parameters:
           azureConnectionName: '${{ variables.AzureConnectionName }}'
