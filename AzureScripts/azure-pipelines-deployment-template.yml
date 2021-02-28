@@ -30,4 +30,4 @@ jobs:
                 resourceGroupName: $
                 package: "$(System.DefaultWorkingDirectory)/**/*API*.zip"
                 runtimeStack: "DOTNET|5.0"
-                startUpCommand: "dotnet "${{ parameters.dotnetAppName }}.dll""
+                startUpCommand: "dotnet ${{ parameters.dotnetAppName }}.dll"
