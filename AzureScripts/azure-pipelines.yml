@@ -19,7 +19,7 @@ stages:
     variables:
       - group: 'tc-home-dev-env-variable-group'
     jobs:
-      - job: Echo Vars
+      - job: EchoVars
         steps:
           - bash: echo ${{ variables.AppServiceName }}
           - bash: echo $(AppServiceName)
