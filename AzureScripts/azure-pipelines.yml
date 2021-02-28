@@ -1,0 +1,62 @@
+# ASP.Net Core and Angular build
+
+trigger:
+  - main
+
+variables:
+  buildConfiguration: "Release"
+  dotnetAppName: "TheCrushinator.Home.Garden.API"
+
+trigger:
+  - main
+
+stages:
+- stage: Build
+  displayName: 'Build RM Azure Functions'
+  jobs:
+  - template: azure-pipelines-build-template.yml
+
+- stage: DeployDEV
+  displayName: 'Deploy to DEV environment'
+  condition: succeeded()
+  dependsOn: Build
+  variables:
+  - group: 'tc-home-dev-env-variable-group'
+  jobs:
+  - template: azure-pipelines-deployment-template.yml
+    parameters:
+      azureConnectionName: '$(AzureConnectionName)'
+      funcAppName: '$(FuncAppName)'
+      resourceGroupName: '$(ResourceGroupName)'
+      environment: 'DEV'
+      dotnetAppName: '$(dotnetAppName)'
+
+- stage: DeployTEST
+  displayName: 'Deploy to TEST environment'
+  condition: succeeded()
+  dependsOn: Build
+  variables:
+  - group: 'tc-home-test-env-variable-group'
+  jobs:
+  - template: azure-pipelines-deployment-template.yml
+    parameters:
+      azureConnectionName: '$(AzureConnectionName)'
+      funcAppName: '$(FuncAppName)'
+      resourceGroupName: '$(ResourceGroupName)'
+      environment: 'TEST'
+      dotnetAppName: '$(dotnetAppName)'
+
+- stage: DeployPROD
+  displayName: 'Deploy to PRD environment'
+  condition: succeeded()
+  dependsOn: Build
+  variables:
+  - group: 'tc-home-prd-env-variable-group'
+  jobs:
+  - template: azure-pipelines-deployment-template.yml
+    parameters:
+      azureConnectionName: '$(AzureConnectionName)'
+      funcAppName: '$(FuncAppName)'
+      resourceGroupName: '$(ResourceGroupName)'
+      environment: 'PRD'
+      dotnetAppName: '$(dotnetAppName)'

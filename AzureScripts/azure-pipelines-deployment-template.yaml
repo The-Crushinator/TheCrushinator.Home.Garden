@@ -1,0 +1,33 @@
+parameters:
+  - name: "dotnetAppName"
+    default: ""
+    type: string
+
+jobs:
+  - deployment: Deploy
+    displayName: "Deploy TheCrushinator Home Web App"
+    environment: $
+    pool:
+      vmImage: "ubuntu-latest"
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: DownloadBuildArtifacts@0
+              displayName: "Download the API build artifact"
+              inputs:
+                buildType: "current"
+                downloadType: "single"
+                artifactName: "API"
+                downloadPath: "$(System.DefaultWorkingDirectory)"
+
+            - task: AzureWebApp@1
+              displayName: Release package to Azure Web App
+              inputs:
+                azureSubscription: $
+                appType: "webAppLinux"
+                appName: $
+                resourceGroupName: $
+                package: "$(System.DefaultWorkingDirectory)/**/*API*.zip"
+                runtimeStack: "DOTNET|5.0"
+                startUpCommand: "dotnet "${{ parameters.dotnetAppName }}.dll""

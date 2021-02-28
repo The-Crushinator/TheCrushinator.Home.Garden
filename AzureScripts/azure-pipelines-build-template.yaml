@@ -1,0 +1,141 @@
+parameters:
+  - name: "buildConfiguration"
+    default: "Release"
+    type: string
+  - name: "solution"
+    default: "**/*.sln"
+    type: string
+  - name: "projects"
+    default: "**/*.csproj"
+    type: string
+  - name: "apiProject"
+    default: "**/*.API/*.csproj"
+    type: string
+  - name: "testProject"
+    default: "**/*Tests/*.csproj"
+    type: string
+  - name: "buildPlatform"
+    default: "Any CPU"
+    type: string
+  - name: "uiProjectFolder"
+    default: "TheCrushinatorHomeGardenUI"
+    type: string
+  - name: "baseHref"
+    default: "/"
+    type: string
+
+stages:
+  - stage: Build_dotnet_core_app
+    jobs:
+      - job: BuildNetCore
+        displayName: "Build .NET Core app"
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: NuGetToolInstaller@0
+            displayName: "Nuget Tool Installer"
+
+          - task: DotNetCoreCLI@2
+            displayName: "Dotnet Restore from nuget.org"
+            inputs:
+              command: "restore"
+              projects: "${{ parameters.projects }}"
+              feedsToUse: "select"
+              vstsFeed: "ca7bc11a-1e8f-4bc3-8336-9f4ee2af991f"
+
+          - task: DotNetCoreCLI@2
+            displayName: "Dotnet Build"
+            inputs:
+              command: "build"
+              projects: "${{ parameters.solution }}"
+              arguments: "--configuration ${{ parameters.buildConfiguration }}"
+
+          # do this after other tasks such as building
+          #   - task: DotNetCoreCLI@2
+          #     displayName: "Dotnet Test"
+          #     inputs:
+          #       command: test
+          #       projects: "${{ parameters.testProject }}"
+          #       arguments: "--configuration ${{ parameters.buildConfiguration }}"
+
+          #   - task: PublishTestResults@2
+          #     condition: succeededOrFailed()
+          #     inputs:
+          #       testResultsFormat: XUnit
+          #       testResultsFiles: "**/*.xml"
+
+          - task: DotNetCoreCLI@2
+            displayName: "Dotnet Publish - API"
+            inputs:
+              command: publish
+              publishWebProjects: True
+              projects: "${{ parameters.apiProject }}"
+              arguments: "--configuration ${{ parameters.buildConfiguration }} --output $(Build.ArtifactStagingDirectory)/API.$(Build.BuildId).zip"
+              zipAfterPublish: True
+
+          # Publish Artifacts
+          ## this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish - API Artifacts"
+            inputs:
+              pathtoPublish: "$(Build.ArtifactStagingDirectory)/API.$(Build.BuildId).zip"
+              artifactName: "API"
+
+  - stage: Build_angular_app # Inspired by https://www.olivercoding.com/2019-01-19-angular-azure-devops/
+    jobs:
+      - job: Angular
+        pool:
+          vmImage: ubuntu-latest
+          demands:
+            - npm
+            - node.js
+        steps:
+          - task: Npm@1
+            displayName: "npm install"
+            inputs:
+              workingDir: "${{ parameters.uiProjectFolder }}"
+              verbose: false
+
+          - task: Npm@1
+            displayName: "Build Angular"
+            inputs:
+              command: custom
+              customCommand: run build -- --prod --output-path dist/${{ parameters.uiProjectFolder }} --base-href ${{ parameters.baseHref }}
+              workingDir: "${{ parameters.uiProjectFolder }}"
+
+          # - task: Npm@1
+          #   displayName: "Test Angular"
+          #   inputs:
+          #     command: custom
+          #     customCommand: run test -- --watch=false --code-coverage
+          #     workingDir: "${{ parameters.uiProjectFolder }}"
+
+          - task: Npm@1
+            displayName: "Lint Angular"
+            inputs:
+              command: custom
+              customCommand: run lint --  --format=stylish
+              workingDir: "${{ parameters.uiProjectFolder }}"
+
+          - task: CopyFiles@2
+            displayName: "Copy Files"
+            inputs:
+              sourceFolder: "${{ parameters.uiProjectFolder }}/dist/${{ parameters.uiProjectFolder }}"
+              contents: "**/*"
+              targetFolder: '$(Build.ArtifactStagingDirectory)\AngularArtifacts'
+              cleanTargetFolder: true
+
+          ## Archive the files into a zip file for publishing
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\AngularArtifacts'
+              archiveType: "zip"
+              archiveFile: "$(Build.ArtifactStagingDirectory)/UI.$(Build.BuildId).zip"
+              includeRootFolder: false
+
+          ## Publish the zip file
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish - UI Artifacts"
+            inputs:
+              pathtoPublish: "$(Build.ArtifactStagingDirectory)/UI.$(Build.BuildId).zip"
+              artifactName: "UI"
